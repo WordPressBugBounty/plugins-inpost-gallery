@@ -4,7 +4,7 @@
   Plugin URI: http://inpost-gallery.pluginus.net/
   Description: Insert Gallery in post, page and any custom post type just in two clicks
   Author: Rostislav Sofronov <realmag777>
-  Version: 2.1.4.2
+  Version: 2.1.4.3
   Author URI: https://www.pluginus.net/
  */
 
@@ -12,9 +12,9 @@ if (!defined('ABSPATH')) {
     die('No direct access allowed!');
 }
 
-define('INPOST_GALLERY_VER', '2.1.4.2');
+define('INPOST_GALLERY_VER', '2.1.4.3');
 
-//19-07-2023
+//19-11-2024
 class InpostGallery {
 
     public static $shortcodes = array();
@@ -320,13 +320,27 @@ class InpostGallery {
             $shortcode_text = str_replace("\'", "'", $shortcode_text);
             $shortcode_text = str_replace('\"', '"', $shortcode_text);
 			$_REQUEST['shortcode_text'] = $shortcode_text;
-            do_shortcode($shortcode_text);
+			
+            do_shortcode(self::check_shortcode($shortcode_text));
         }
         //***
         $data['post_id'] = (int)$_REQUEST['post_id'];
         wp_die(self::render_html('views/' . self::get_shortcode_key_folder(sanitize_text_field($_REQUEST['shortcode_name'])) . '/popups/' . sanitize_text_field($_REQUEST['shortcode_name']) . ".php", $data));
     }
+	public static function check_shortcode( $text = "") {
+		$tags = array(
+			'inpost_gallery',
+		);
+		$tags = array_merge(self::get_shortcodes_array(), $tags);
 
+		$pattern = get_shortcode_regex(array_unique($tags));
+		preg_match_all("/$pattern/", $text, $matches);
+		if (isset($matches[0][0]) AND !empty($matches[0][0])) {
+			return $matches[0][0];
+		} else {
+			return "";
+		}
+	}
     public static function get_shortcode_key_folder($shortcode_key) {
         foreach (self::$shortcodes_keys_by_folders as $folder => $shortcodes_keys) {
             if (in_array($shortcode_key, $shortcodes_keys)) {
