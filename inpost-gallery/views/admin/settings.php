@@ -44,8 +44,9 @@
                 <p class="submit">
                     <input type="submit" value="<?php _e("Save settings", 'inpost-gallery') ?>" class="button button-primary" name="submit" />
                 </p>
+				
             </form>
-
+			<input type="hidden" name="inpost-gallery-nonce" value="<?php echo wp_create_nonce( 'inpost-gallery-settings' ) ?>">
             <?php InpostGallery::draw_donate_button() ?>
             <br />
 

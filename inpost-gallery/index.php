@@ -4,7 +4,7 @@
   Plugin URI: http://inpost-gallery.pluginus.net/
   Description: Insert Gallery in post, page and any custom post type just in two clicks
   Author: Rostislav Sofronov <realmag777>
-  Version: 2.1.4.3
+  Version: 2.1.4.4
   Author URI: https://www.pluginus.net/
  */
 
@@ -12,9 +12,9 @@ if (!defined('ABSPATH')) {
     die('No direct access allowed!');
 }
 
-define('INPOST_GALLERY_VER', '2.1.4.3');
+define('INPOST_GALLERY_VER', '2.1.4.4');
 
-//19-11-2024
+//28-03-2025
 class InpostGallery {
 
     public static $shortcodes = array();
@@ -316,31 +316,33 @@ class InpostGallery {
         $data = array();
         if ($_REQUEST['mode'] == 'edit') {
             $_REQUEST['shortcode_mode_edit'] = array();
-			$shortcode_text = wp_filter_post_kses($_REQUEST['shortcode_text']);
+            $shortcode_text = wp_filter_post_kses($_REQUEST['shortcode_text']);
             $shortcode_text = str_replace("\'", "'", $shortcode_text);
             $shortcode_text = str_replace('\"', '"', $shortcode_text);
-			$_REQUEST['shortcode_text'] = $shortcode_text;
-			
+            $_REQUEST['shortcode_text'] = $shortcode_text;
+
             do_shortcode(self::check_shortcode($shortcode_text));
         }
         //***
-        $data['post_id'] = (int)$_REQUEST['post_id'];
+        $data['post_id'] = (int) $_REQUEST['post_id'];
         wp_die(self::render_html('views/' . self::get_shortcode_key_folder(sanitize_text_field($_REQUEST['shortcode_name'])) . '/popups/' . sanitize_text_field($_REQUEST['shortcode_name']) . ".php", $data));
     }
-	public static function check_shortcode( $text = "") {
-		$tags = array(
-			'inpost_gallery',
-		);
-		$tags = array_merge(self::get_shortcodes_array(), $tags);
 
-		$pattern = get_shortcode_regex(array_unique($tags));
-		preg_match_all("/$pattern/", $text, $matches);
-		if (isset($matches[0][0]) AND !empty($matches[0][0])) {
-			return $matches[0][0];
-		} else {
-			return "";
-		}
-	}
+    public static function check_shortcode($text = "") {
+        $tags = array(
+            'inpost_gallery',
+        );
+        $tags = array_merge(self::get_shortcodes_array(), $tags);
+
+        $pattern = get_shortcode_regex(array_unique($tags));
+        preg_match_all("/$pattern/", $text, $matches);
+        if (isset($matches[0][0]) AND !empty($matches[0][0])) {
+            return $matches[0][0];
+        } else {
+            return "";
+        }
+    }
+
     public static function get_shortcode_key_folder($shortcode_key) {
         foreach (self::$shortcodes_keys_by_folders as $folder => $shortcodes_keys) {
             if (in_array($shortcode_key, $shortcodes_keys)) {
@@ -353,7 +355,7 @@ class InpostGallery {
 
     //for inputs in shortcode popups
     public static function set_default_value($key, $default_value = '') {
-        if (isset($_REQUEST["shortcode_mode_edit"]) AND!empty($_REQUEST["shortcode_mode_edit"])) {
+        if (isset($_REQUEST["shortcode_mode_edit"]) AND !empty($_REQUEST["shortcode_mode_edit"])) {
             if (is_array($_REQUEST["shortcode_mode_edit"])) {
                 if (isset($_REQUEST["shortcode_mode_edit"][$key])) {
                     return self::sanitize_array_r($_REQUEST["shortcode_mode_edit"][$key]);
@@ -375,6 +377,7 @@ class InpostGallery {
         include($pagepath);
         return ob_get_clean();
     }
+
     public static function render_html_e($pagepath, $data = array()) {
         if (isset($data['pagepath'])) {
             unset($data['pagepath']);
@@ -383,7 +386,7 @@ class InpostGallery {
         $pagepath = self::get_application_path() . '/' . $pagepath;
         @extract($data);
         include($pagepath);
-    }	
+    }
 
     public static function draw_shortcode_option($data) {
         switch ($data['type']) {
@@ -406,12 +409,12 @@ class InpostGallery {
                     <h4 class="label" for="<?php echo esc_attr($data['id']) ?>"><?php echo esc_html($data['title']) ?></h4>
                 <?php endif; ?>
 
-                <?php if (!empty($data['options'])): ?>
-                    <select <?php if ($data['display'] == 0): ?>style="display: none;"<?php endif; ?> class="js_shortcode_template_changer data-select <?php echo esc_attr(isset($data['css_classes'])?$data['css_classes']:''); ?>" data-shortcode-field="<?php echo esc_attr($data['shortcode_field']) ?>" id="<?php echo esc_attr($data['id']) ?>">
+                    <?php if (!empty($data['options'])): ?>
+                    <select <?php if ($data['display'] == 0): ?>style="display: none;"<?php endif; ?> class="js_shortcode_template_changer data-select <?php echo esc_attr(isset($data['css_classes']) ? $data['css_classes'] : ''); ?>" data-shortcode-field="<?php echo esc_attr($data['shortcode_field']) ?>" id="<?php echo esc_attr($data['id']) ?>">
 
-                        <?php foreach ($data['options'] as $key => $text) : ?>
+                    <?php foreach ($data['options'] as $key => $text) : ?>
                             <option <?php if ($data['default_value'] == $key) echo 'selected' ?> value="<?php echo esc_attr($key) ?>"><?php echo esc_html($text) ?></option>
-                        <?php endforeach; ?>
+                    <?php endforeach; ?>
 
                     </select>
                     <span class="preset_description"><?php echo wp_kses_post(wp_unslash($data['description'])) ?></span>
@@ -420,26 +423,26 @@ class InpostGallery {
                 break;
             case 'text':
                 ?>
-                <?php if (!empty($data['title'])): ?>
+                    <?php if (!empty($data['title'])): ?>
                     <h4 class="label" for="<?php echo esc_attr($data['id']) ?>"><?php echo esc_html($data['title']) ?>
-                        <?php if (isset($data['help_button'])): ?>
+                    <?php if (isset($data['help_button'])): ?>
                             <a class="js_pn_show_help" data-id="<?php echo esc_attr($data['help_button']) ?>"></a><br />
-                        <?php endif; ?>
+                    <?php endif; ?>
                     </h4>
                 <?php endif; ?>
 
-                <input type="text" value="<?php echo esc_attr($data['default_value']) ?>" <?php if (isset($data['placeholder'])): ?>placeholder="<?php echo esc_attr($data['placeholder']) ?>"<?php endif; ?> class="js_shortcode_template_changer data-input <?php echo esc_attr(isset($data['css_classes'])?$data['css_classes']:''); ?>" data-shortcode-field="<?php echo esc_attr($data['shortcode_field']) ?>" id="<?php echo esc_attr($data['id']) ?>" />
+                <input type="text" value="<?php echo esc_attr($data['default_value']) ?>" <?php if (isset($data['placeholder'])): ?>placeholder="<?php echo esc_attr($data['placeholder']) ?>"<?php endif; ?> class="js_shortcode_template_changer data-input <?php echo esc_attr(isset($data['css_classes']) ? $data['css_classes'] : ''); ?>" data-shortcode-field="<?php echo esc_attr($data['shortcode_field']) ?>" id="<?php echo esc_attr($data['id']) ?>" />
                 <span class="preset_description"><?php echo wp_kses_post(wp_unslash($data['description'])) ?></span>
                 <?php
                 break;
             case 'color':
                 ?>
                 <div <?php if (@$data['display'] == 0): ?>style="display: none;"<?php endif; ?> class="list-item-color">
-                    <?php if (!empty($data['title'])): ?>
+                <?php if (!empty($data['title'])): ?>
                         <h4 class="label" for="<?php echo esc_attr($data['id']) ?>"><?php echo esc_html($data['title']) ?></h4>
-                    <?php endif; ?>
+                <?php endif; ?>
 
-                    <input type="text" data-shortcode-field="<?php echo esc_attr($data['shortcode_field']) ?>" value="<?php echo esc_attr($data['default_value']) ?>" class="bg_hex_color text small js_shortcode_template_changer <?php echo esc_attr(isset($data['css_classes'])?$data['css_classes']:''); ?>" id="<?php echo esc_attr($data['id']) ?>">
+                    <input type="text" data-shortcode-field="<?php echo esc_attr($data['shortcode_field']) ?>" value="<?php echo esc_attr($data['default_value']) ?>" class="bg_hex_color text small js_shortcode_template_changer <?php echo esc_attr(isset($data['css_classes']) ? $data['css_classes'] : ''); ?>" id="<?php echo esc_attr($data['id']) ?>">
                     <div style="background-color: <?php echo esc_attr($data['default_value']) ?>" class="bgpicker"></div>
                     <span class="preset_description"><?php echo wp_kses_post(wp_unslash($data['description'])) ?></span>
                 </div>
@@ -449,11 +452,11 @@ class InpostGallery {
                 ?>
                 <?php if (!empty($data['title'])): ?>
                     <h4 class="label" for="<?php echo esc_attr($data['id']) ?>"><?php echo esc_html($data['title']) ?></h4>
-                <?php endif; ?>
+                    <?php endif; ?>
 
-                <input type="text" id="<?php echo esc_attr($data['id']) ?>" value="<?php echo esc_attr($data['default_value']) ?>" class="js_shortcode_template_changer data-input data-upload <?php echo esc_attr(isset($data['css_classes'])?$data['css_classes']:''); ?>" data-shortcode-field="<?php echo esc_attr($data['shortcode_field']) ?>" />
+                <input type="text" id="<?php echo esc_attr($data['id']) ?>" value="<?php echo esc_attr($data['default_value']) ?>" class="js_shortcode_template_changer data-input data-upload <?php echo esc_attr(isset($data['css_classes']) ? $data['css_classes'] : ''); ?>" data-shortcode-field="<?php echo esc_attr($data['shortcode_field']) ?>" />
                 <a title="" class="pn_button_upload2 button-primary" href="#">
-                    <?php _e('Upload', 'inpost-gallery'); ?>
+                <?php _e('Upload', 'inpost-gallery'); ?>
                 </a>
                 <span class="preset_description"><?php echo wp_kses_post(wp_unslash($data['description'])) ?></span>
                 <?php
@@ -480,7 +483,7 @@ class InpostGallery {
                     <input <?php if ($data['values'][1]['checked'] == 1): ?>checked=""<?php endif; ?> type="radio" name="<?php echo esc_attr($data['name']) ?>" id="<?php echo esc_attr($data['values'][1]['id']) ?>" value="<?php echo esc_attr($data['values'][1]['value']) ?>" class="js_shortcode_radio_self_update" />
                     <label for="<?php echo esc_attr($data['values'][1]['id']) ?>" class="label-form"><span></span><?php echo esc_html($data['values'][1]['title']) ?></label>
 
-                    <input type="hidden" id="<?php echo esc_attr(isset($data['hidden_id'])?$data['hidden_id']:'') ?>" value="<?php echo esc_attr($data['value']) ?>" class="js_shortcode_template_changer" data-shortcode-field="<?php echo esc_attr($data['shortcode_field']) ?>" />
+                    <input type="hidden" id="<?php echo esc_attr(isset($data['hidden_id']) ? $data['hidden_id'] : '') ?>" value="<?php echo esc_attr($data['value']) ?>" class="js_shortcode_template_changer" data-shortcode-field="<?php echo esc_attr($data['shortcode_field']) ?>" />
                 </div><!--/ .radio-holder-->
                 <span class="preset_description"><?php echo wp_kses_post(wp_unslash($data['description'])) ?></span>
                 <?php
@@ -501,7 +504,7 @@ class InpostGallery {
         if (!empty($_POST)) {
             if (isset($_POST["inpost_gallery_data"])) {
                 global $post;
-				$gallery_data = self::sanitize_array_r($_POST["inpost_gallery_data"]);
+                $gallery_data = self::sanitize_array_r($_POST["inpost_gallery_data"]);
                 update_post_meta($post->ID, 'inpost_gallery_data', $gallery_data);
             }
         }
@@ -510,9 +513,12 @@ class InpostGallery {
     //ajax
     public static function save_settings() {
         if (current_user_can('manage_options')) {
+            if (!isset($_REQUEST['nonce']) || !wp_verify_nonce($_REQUEST['nonce'], 'inpost-gallery-settings')) {
+                exit;
+            }
             $data = array();
             parse_str($_REQUEST['values'], $data);
-			$data = self::sanitize_array_r($data);
+            $data = self::sanitize_array_r($data);
             update_option('inpost_gallery_settings', $data);
         }
 
@@ -522,7 +528,7 @@ class InpostGallery {
     public static function get_settings() {
         $settings = get_option('inpost_gallery_settings', true);
 
-        if (empty($settings) OR!is_array($settings)) {
+        if (empty($settings) OR !is_array($settings)) {
             $settings = array(); //after plugin installation it is empty
         }
 
@@ -599,7 +605,7 @@ class InpostGallery {
             case 'takebyid':
                 //{'slug':'post','exec':'takebyid','data':('230:4:last','232:2:first','234:1:last')}
                 $blocks = $args['data'];
-                if (is_array($blocks) AND!empty($blocks)) {
+                if (is_array($blocks) AND !empty($blocks)) {
                     foreach ($blocks as $block) {
                         $res = explode(':', $block);
                         $post_id = (int) $res[0];
@@ -634,7 +640,7 @@ class InpostGallery {
                 //{'slug':'post','exec':'take','data':('4:DESC:2:first')}
                 $data = explode(':', $args['data'][0]);
 
-                if (is_array($data) AND!empty($data)) {
+                if (is_array($data) AND !empty($data)) {
                     $numberposts = $data[0];
                     $order = $data[1];
                     $img_count = $data[2];
@@ -685,22 +691,21 @@ class InpostGallery {
         }
         exit;
     }
-	public static function sanitize_array_r($arr) {
-        $newArr = array();
-		if(!is_array($arr)){
-			return sanitize_text_field($arr);
-		}
-        foreach ($arr as $key => $value) {
-			if ($key == 'test_html') {
-				$newArr[sanitize_key($key)] = wp_filter_post_kses($value);
-			} else {
-				$newArr[sanitize_key($key)] = ( is_array($value) ) ? self::sanitize_array_r($value) : sanitize_text_field($value);
-			}
-            
-        }
-        return $newArr;		
-	}	
 
+    public static function sanitize_array_r($arr) {
+        $newArr = array();
+        if (!is_array($arr)) {
+            return sanitize_text_field($arr);
+        }
+        foreach ($arr as $key => $value) {
+            if ($key == 'test_html') {
+                $newArr[sanitize_key($key)] = wp_filter_post_kses($value);
+            } else {
+                $newArr[sanitize_key($key)] = ( is_array($value) ) ? self::sanitize_array_r($value) : sanitize_text_field($value);
+            }
+        }
+        return $newArr;
+    }
 }
 
 //*******

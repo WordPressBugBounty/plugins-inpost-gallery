@@ -141,6 +141,8 @@ jQuery(function() {
                                                                 post_id: inpost_gallery_post_id,
                                                                 shortcode_text: value.name
                                                             };
+							    console.log(value.name);
+							     console.log("wp38");
                                                             jQuery.post(ajaxurl, data, function(html) {
                                                                 pn_ext_shortcodes.hide_static_info_popup();
                                                                 pn_advanced_wp_popup2.set_height(0, true, 1);

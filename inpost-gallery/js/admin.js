@@ -236,9 +236,14 @@ var INPOSTGALLERY_ADMIN_SLIDES = function () {
             //***
 
             jQuery("#inpost_gallery_settings_form").submit(function () {
+		
+		let values = jQuery(this).serialize();
+		let nonce = jQuery("input[name='inpost-gallery-nonce']").val();
+
                 var data = {
                     action: "inpost_gallery_save_settings",
-                    values: jQuery(this).serialize()
+                    values: values,
+		    nonce: nonce
                 };
                 jQuery.post(ajaxurl, data, function (response) {
                     self.show_info_popup(inpost_gallery_lang_settings_saved);

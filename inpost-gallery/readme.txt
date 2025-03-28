@@ -3,9 +3,9 @@ Contributors: RealMag777
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rostislavsofronov%40gmail%2ecom&lc=US&item_name=PluginusNet&item_number=3&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
 Tags: gallery, image, album, photo, photo gallery, images gallery, woocommerce gallery, photoalbum, photogallery, pictures, post, page
 Requires at least: 3.5.0
-Tested up to: 6.7
+Tested up to: 6.8
 Requires PHP: 5.6
-Stable tag: 2.1.4.3
+Stable tag: 2.1.4.4
 
 InPost Gallery - photo and image gallery for WordPress
 
@@ -60,6 +60,9 @@ R: [Demo site](http://inpost-gallery.pluginus.net/)
 
 
 == Changelog ==
+
+= 2.1.4.4 =
+1 security issue, thanks to independent security researcher Skalucy and patchstack.com service
 
 = 2.1.4.3 =
 1 security issue, thanks to independent security researcher Arkadiusz Hydzik and Wordfence service
