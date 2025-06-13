@@ -3,8 +3,8 @@
   Plugin Name: InPost Gallery
   Plugin URI: http://inpost-gallery.pluginus.net/
   Description: Insert Gallery in post, page and any custom post type just in two clicks
-  Author: Rostislav Sofronov <realmag777>
-  Version: 2.1.4.4
+  Author: realmag777
+  Version: 2.1.4.5
   Author URI: https://www.pluginus.net/
  */
 
@@ -12,9 +12,9 @@ if (!defined('ABSPATH')) {
     die('No direct access allowed!');
 }
 
-define('INPOST_GALLERY_VER', '2.1.4.4');
+define('INPOST_GALLERY_VER', '2.1.4.5');
 
-//28-03-2025
+//13-06-2025
 class InpostGallery {
 
     public static $shortcodes = array();
@@ -323,9 +323,13 @@ class InpostGallery {
 
             do_shortcode(self::check_shortcode($shortcode_text));
         }
+        $shortcode_name = sanitize_text_field($_REQUEST['shortcode_name']);
+        if (!isset(self::$shortcodes[$shortcode_name])) {
+            $shortcode_name = 'inpost_gallery';
+        }
         //***
         $data['post_id'] = (int) $_REQUEST['post_id'];
-        wp_die(self::render_html('views/' . self::get_shortcode_key_folder(sanitize_text_field($_REQUEST['shortcode_name'])) . '/popups/' . sanitize_text_field($_REQUEST['shortcode_name']) . ".php", $data));
+        wp_die(self::render_html('views/' . self::get_shortcode_key_folder($shortcode_name) . '/popups/' . $shortcode_name . ".php", $data));
     }
 
     public static function check_shortcode($text = "") {
@@ -409,12 +413,12 @@ class InpostGallery {
                     <h4 class="label" for="<?php echo esc_attr($data['id']) ?>"><?php echo esc_html($data['title']) ?></h4>
                 <?php endif; ?>
 
-                    <?php if (!empty($data['options'])): ?>
+                <?php if (!empty($data['options'])): ?>
                     <select <?php if ($data['display'] == 0): ?>style="display: none;"<?php endif; ?> class="js_shortcode_template_changer data-select <?php echo esc_attr(isset($data['css_classes']) ? $data['css_classes'] : ''); ?>" data-shortcode-field="<?php echo esc_attr($data['shortcode_field']) ?>" id="<?php echo esc_attr($data['id']) ?>">
 
-                    <?php foreach ($data['options'] as $key => $text) : ?>
+                        <?php foreach ($data['options'] as $key => $text) : ?>
                             <option <?php if ($data['default_value'] == $key) echo 'selected' ?> value="<?php echo esc_attr($key) ?>"><?php echo esc_html($text) ?></option>
-                    <?php endforeach; ?>
+                        <?php endforeach; ?>
 
                     </select>
                     <span class="preset_description"><?php echo wp_kses_post(wp_unslash($data['description'])) ?></span>
@@ -423,11 +427,11 @@ class InpostGallery {
                 break;
             case 'text':
                 ?>
-                    <?php if (!empty($data['title'])): ?>
+                <?php if (!empty($data['title'])): ?>
                     <h4 class="label" for="<?php echo esc_attr($data['id']) ?>"><?php echo esc_html($data['title']) ?>
-                    <?php if (isset($data['help_button'])): ?>
+                        <?php if (isset($data['help_button'])): ?>
                             <a class="js_pn_show_help" data-id="<?php echo esc_attr($data['help_button']) ?>"></a><br />
-                    <?php endif; ?>
+                        <?php endif; ?>
                     </h4>
                 <?php endif; ?>
 
@@ -438,9 +442,9 @@ class InpostGallery {
             case 'color':
                 ?>
                 <div <?php if (@$data['display'] == 0): ?>style="display: none;"<?php endif; ?> class="list-item-color">
-                <?php if (!empty($data['title'])): ?>
+                    <?php if (!empty($data['title'])): ?>
                         <h4 class="label" for="<?php echo esc_attr($data['id']) ?>"><?php echo esc_html($data['title']) ?></h4>
-                <?php endif; ?>
+                    <?php endif; ?>
 
                     <input type="text" data-shortcode-field="<?php echo esc_attr($data['shortcode_field']) ?>" value="<?php echo esc_attr($data['default_value']) ?>" class="bg_hex_color text small js_shortcode_template_changer <?php echo esc_attr(isset($data['css_classes']) ? $data['css_classes'] : ''); ?>" id="<?php echo esc_attr($data['id']) ?>">
                     <div style="background-color: <?php echo esc_attr($data['default_value']) ?>" class="bgpicker"></div>
@@ -452,11 +456,11 @@ class InpostGallery {
                 ?>
                 <?php if (!empty($data['title'])): ?>
                     <h4 class="label" for="<?php echo esc_attr($data['id']) ?>"><?php echo esc_html($data['title']) ?></h4>
-                    <?php endif; ?>
+                <?php endif; ?>
 
                 <input type="text" id="<?php echo esc_attr($data['id']) ?>" value="<?php echo esc_attr($data['default_value']) ?>" class="js_shortcode_template_changer data-input data-upload <?php echo esc_attr(isset($data['css_classes']) ? $data['css_classes'] : ''); ?>" data-shortcode-field="<?php echo esc_attr($data['shortcode_field']) ?>" />
                 <a title="" class="pn_button_upload2 button-primary" href="#">
-                <?php _e('Upload', 'inpost-gallery'); ?>
+                    <?php _e('Upload', 'inpost-gallery'); ?>
                 </a>
                 <span class="preset_description"><?php echo wp_kses_post(wp_unslash($data['description'])) ?></span>
                 <?php

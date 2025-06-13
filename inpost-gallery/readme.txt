@@ -5,7 +5,7 @@ Tags: gallery, image, album, photo, photo gallery, images gallery, woocommerce g
 Requires at least: 3.5.0
 Tested up to: 6.8
 Requires PHP: 5.6
-Stable tag: 2.1.4.4
+Stable tag: 2.1.4.5
 
 InPost Gallery - photo and image gallery for WordPress
 
@@ -60,6 +60,9 @@ R: [Demo site](http://inpost-gallery.pluginus.net/)
 
 
 == Changelog ==
+
+= 2.1.4.5 =
+1 security issue, thanks to independent security researcher LVT-tholv2k and patchstack.com service
 
 = 2.1.4.4 =
 1 security issue, thanks to independent security researcher Skalucy and patchstack.com service
@@ -166,7 +169,7 @@ Plugin release. Operate all the basic functions.
 
 == License ==
 
-This plugin is copyright pluginus.net ©2012-2023 with [GNU General Public License][] by realmag777.
+This plugin is copyright pluginus.net ©2012-2025 with [GNU General Public License][] by realmag777.
 
 This program is free software; you can redistribute it and/or modify it under the terms of the [GNU General Public License][] as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
